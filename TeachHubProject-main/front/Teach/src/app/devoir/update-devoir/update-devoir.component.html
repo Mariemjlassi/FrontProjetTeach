@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Modifier Devoir</title>
+</head>
+<body style="display: flex; align-items: center; justify-content: center;">
+    <div class="login-page">
+        <div class="form">
+            <form class="login-form" [formGroup]="UpdateDevoirForm" (ngSubmit)="updateDevoir()">
+                <h2><i class="fa-solid fa-pen-to-square"></i> Modifier Devoir</h2>
+                <br>
+                
+        <input type="text" class="form-control" id="prenom" name="prenom" formControlName="prenom" [hidden]="true">
+        
+      
+  
+        <input type="text" class="form-control" id="prenom" name="prenom" formControlName="prenom" [hidden]="true">
+       
+                <input type="text" class="form-control" formControlName="description" name="description" placeholder="Description" required>
+                <input type="number" class="form-control" formControlName="ponderation" placeholder="Ponderation" required>
+                <input type="number" class="form-control" formControlName="bareme" placeholder="Bareme" required>
+                <input type="date" class="form-control" formControlName="dateLimite" required>
+                <input type="text" class="form-control" formControlName="statut" placeholder="Statut" required>
+                
+                <br>
+                <button type="submit">Modifier</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/styles.css">
+    </head>
+    <body>
+        <main class="main bd-grid" >
+            <div *ngFor="let c of coursList">
+            <article class="card" [routerLink]="['/devoirs','list',c.idCours]" style="cursor: pointer;">
+                <div class="card__img">
+                    <img src="../../../assets/images/cours.png" alt="">
+                </div>
+                <div class="card__name">
+                    <p>{{c.enseignant.nom}} {{c.enseignant.prenom}}</p>
+                </div>
+                <div class="card__precis">
+                    <a href="" class="card__icon" ></a>
+                    
+                    <div>
+                        <span class="card__preci card__preci--before"><b>{{c.nom}}</b></span>
+                        <span class="card__preci card__preci--now">Coefficient : {{c.coefficient}}</span>
+                        <span class="card__preci card__preci--now">Credits : {{c.credits}}</span>
+                        
+                        <div class="center-container" *ngIf="test">
+                           
+                            <button class="primary-cta" [routerLink]="['/cours','update',c.idCours]">
+                                <i class="fa-solid fa-pencil" style="margin-right: 5px;"></i>
+                                Update
+                            </button>
+                            
+                          </div>
+                    </div>
+                    <a href="" class="card__icon"></a>
+                </div>
+            </article>
+        </div>
+        </main>
+       
+           
+
+        <!-- ICONS -->
+        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+    </body>
+</html>            
