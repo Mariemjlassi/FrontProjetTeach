@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,10 @@ import org.springframework.stereotype.Service;
 import com.project.app.dto.CourDTO;
 import com.project.app.models.Cour;
 import com.project.app.models.Enseignant;
+import com.project.app.models.Etudiant;
 import com.project.app.repository.CourRepository;
 import com.project.app.repository.EnseignantRepository;
+import com.project.app.repository.EtudiantRepository;
 
 
 
@@ -27,6 +30,8 @@ public class CourService implements IcourService {
 	CourRepository courrep ;
 
 	EnseignantRepository enseignantRepository;
+	@Autowired
+    EtudiantRepository etudiantRepository;
 	
 	
 	public CourService(CourRepository courrep, EnseignantRepository enseignantRepository) {
@@ -34,12 +39,40 @@ public class CourService implements IcourService {
 		this.courrep = courrep;
 		this.enseignantRepository = enseignantRepository;
 	}
+	
+	public boolean addStudentToCourseByCode(Long studentId, String courseCode) {
+        Cour course = courrep.findByCode(courseCode);
+        if (course != null) {
+            Etudiant student = etudiantRepository.findById(studentId).orElse(null);
+            if (student != null) {
+                course.getStudents().add(student);
+                courrep.save(course);
+                return true;
+            }
+        }
+        return false;
+    }
+	
+	 public boolean addStudentToCourseByEmail(String studentEmail, String courseCode) {
+	        Cour course = courrep.findByCode(courseCode);
+	        if (course != null) {
+	            Etudiant student = etudiantRepository.findByEmail(studentEmail).orElse(null);
+	            if (student != null) {
+	                course.getStudents().add(student);
+	                courrep.save(course);
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
+
 
 	@Override
 	public Cour addCour(CourDTO CourDTO,String usernameEns) {
 		Cour c=this.mapToEntity(CourDTO);
 		Enseignant e=this.enseignantRepository.findByEmail(usernameEns).orElseThrow();
 		c.setEnseignant(e);
+		c.setCode(UUID.randomUUID().toString().substring(0, 6));
 		 Cour savedCour = courrep.save(c);
 		 
 		return savedCour;
@@ -80,6 +113,6 @@ public class CourService implements IcourService {
 		cour.setMethodeCalcul(courDTO.getMethodeCalcul());
 		return this.courrep.save(cour);
 	}
-
-
+	
+	
 }

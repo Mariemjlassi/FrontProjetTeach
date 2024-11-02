@@ -7,12 +7,14 @@ import { ListCoursComponent } from './list-cours/list-cours.component';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateCoursComponent } from './update-cours/update-cours.component';
+import { InviteStudentComponent } from './invite-student/invite-student.component';
 
 @NgModule({
   declarations: [
     AddCoursComponent,
     ListCoursComponent,
-    UpdateCoursComponent
+    UpdateCoursComponent,
+    InviteStudentComponent
   ],
   imports: [
     CommonModule,

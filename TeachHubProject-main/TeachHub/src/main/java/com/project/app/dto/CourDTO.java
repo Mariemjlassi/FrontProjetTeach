@@ -9,6 +9,14 @@ public class CourDTO {
     private float coefficient;
 
     private int credits;
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     private String methodeCalcul;
     public String getMethodeCalcul() {

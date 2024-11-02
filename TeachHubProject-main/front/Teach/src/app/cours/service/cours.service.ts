@@ -28,6 +28,18 @@ export class CoursService {
   deleteCours(id: number): Observable<string> {
     return this.http.delete(BASE_URL + 'deletecours/'+ id, { headers: this.headers!, responseType: 'text' });
   }
+  inviteStudentById(courseCode: string, studentId: number): Observable<string> {
+    return this.http.post<string>(`${BASE_URL}${courseCode}/inviteById/${studentId}`, {}, { headers: this.headers! });
+  }
+  
+  inviteStudentByEmail(courseCode: string, studentEmail: string): Observable<string> {
+    return this.http.post<string>(
+        `${BASE_URL}${courseCode}/inviteByEmail`, 
+        { studentEmail }, // Envoyer le studentEmail dans le corps
+        { headers: this.headers! }
+    );
+}
+
   getCoursById(id: number): Observable<ICours | null> {
     return this.getAllCours().pipe(
       map(cour => {

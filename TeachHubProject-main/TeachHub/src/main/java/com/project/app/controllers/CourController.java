@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.app.dto.CourDTO;
@@ -48,4 +49,26 @@ public class CourController {
 		 this.courserv.deleteCour(id);
 		 return ResponseEntity.status(HttpStatus.OK).body("Cours deleted successfully");
 	 }
+	
+	@PostMapping("/{courseCode}/inviteById/{studentId}")
+    public ResponseEntity<String> inviteStudentById(
+            @PathVariable String courseCode, @PathVariable Long studentId) {
+        boolean result = courserv.addStudentToCourseByCode(studentId, courseCode);
+        if (result) {
+            return ResponseEntity.ok("L'étudiant a été invité avec succès.");
+        }
+        return ResponseEntity.badRequest().body("Impossible d'inviter l'étudiant.");
+    }
+
+	@PostMapping("/{courseCode}/inviteByEmail")
+	public ResponseEntity<String> inviteStudentByEmail(
+	        @PathVariable String courseCode, @RequestBody Map<String, String> request) {
+	    String studentEmail = request.get("studentEmail");
+	    boolean result = courserv.addStudentToCourseByEmail(studentEmail, courseCode);
+	    if (result) {
+	        return ResponseEntity.ok("L'étudiant a été invité avec succès.");
+	    }
+	    return ResponseEntity.badRequest().body("Impossible d'inviter l'étudiant.");
+	}
+
 }
