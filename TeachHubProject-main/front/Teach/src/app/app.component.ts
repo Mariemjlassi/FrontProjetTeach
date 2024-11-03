@@ -15,6 +15,7 @@ export class AppComponent {
 
   constructor(private router: Router, private serviceAuth: AuthService, private cdr: ChangeDetectorRef) {}
 
+  
   ngDoCheck(): void {
     let currentroute = this.router.url;
     let role = localStorage.getItem('role');

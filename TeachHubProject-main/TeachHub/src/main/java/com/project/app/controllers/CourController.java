@@ -38,6 +38,7 @@ public class CourController {
     public List<Cour> getAllCours(@PathVariable(value="id") Long id) {
         return courserv.getAllCours(id); 
     }	
+	
 	@PutMapping("/updatecours/{id}")
 	public ResponseEntity<Cour> updateCour(@PathVariable(value="id") int id,@RequestBody CourDTO courDTO){
 		Cour cour=this.courserv.updateCour( id,courDTO);
@@ -70,5 +71,17 @@ public class CourController {
 	    }
 	    return ResponseEntity.badRequest().body("Impossible d'inviter l'étudiant.");
 	}
+	
+	@GetMapping("/cours/enseignant/{id}")
+	public ResponseEntity<List<Cour>> getCoursByEnseignant(@PathVariable(value = "id") Long id) {
+	    List<Cour> cours = courserv.getAllCours(id);
+	    return ResponseEntity.ok(cours);
+	}
+
+    @GetMapping("/cours/etudiant/{id}")
+    public ResponseEntity<List<Cour>> getCoursByEtudiant(@PathVariable(value = "id") Long id) {
+        List<Cour> cours = courserv.getCoursByEtudiantId(id);
+        return ResponseEntity.ok(cours);
+    }
 
 }

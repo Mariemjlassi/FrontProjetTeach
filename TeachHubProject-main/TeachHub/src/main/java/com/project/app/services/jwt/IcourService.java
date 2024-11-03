@@ -16,5 +16,7 @@ public interface IcourService {
 	Cour updateCour(int courId,CourDTO courDTO);
 	public boolean addStudentToCourseByCode(Long studentId, String courseCode);
 	public boolean addStudentToCourseByEmail(String studentEmail, String courseCode);
+	public List<Cour> getCoursByEtudiantId(Long etudiantId);
+	
 	 
 }

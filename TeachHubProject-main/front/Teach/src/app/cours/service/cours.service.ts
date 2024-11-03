@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ICours } from '../model/icours';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/service/auth.service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { ICoursDTO } from '../model/icours-dto';
 import { IEnseignant } from 'src/app/auth/model/ienseignant';
 const BASE_URL = ["http://localhost:9090/"];
@@ -10,6 +10,7 @@ const BASE_URL = ["http://localhost:9090/"];
   providedIn: 'root'
 })
 export class CoursService {
+  private apiUrl = 'http://localhost:9090/';
   cours!:ICours[];
   headers= this.service.createAuhtorizationHeader()
   
@@ -31,6 +32,15 @@ export class CoursService {
   inviteStudentById(courseCode: string, studentId: number): Observable<string> {
     return this.http.post<string>(`${BASE_URL}${courseCode}/inviteById/${studentId}`, {}, { headers: this.headers! });
   }
+  getCoursByStudentId(studentId: number): Observable<ICours[]> {
+    return this.http.get<ICours[]>(`${BASE_URL}cours/etudiant/${studentId}`, { headers: this.headers! });
+  }
+  
+  getCoursByEnseignantId(enseignantId: number): Observable<ICours[]> {
+    return this.http.get<ICours[]>(`${BASE_URL}cours/enseignant/${enseignantId}`, { headers: this.headers! });
+}
+
+
   
   inviteStudentByEmail(courseCode: string, studentEmail: string): Observable<string> {
     return this.http.post<string>(

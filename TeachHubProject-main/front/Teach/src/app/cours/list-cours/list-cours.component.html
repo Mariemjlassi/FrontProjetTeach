@@ -6,11 +6,16 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/css/styles.css">
+    
     </head>
     <body>
-        <main class="main bd-grid" >
-            <div *ngFor="let c of coursList">
+      <div *ngIf="role === 'etudiant'">
+        <input type="text" [(ngModel)]="courseCode" placeholder="Entrez le code du cours">
+        <button (click)="joinCourse()">Rejoindre le cours</button>
+    </div>
+    
+      <main class="main bd-grid" *ngIf="coursList.length > 0">
+        <div *ngFor="let c of coursList">
             <article class="card" [routerLink]="['/devoirs','list',c.idCours]" style="cursor: pointer;">
                 <div class="card__img">
                     <img src="../../../assets/images/cours.png" alt="">
@@ -19,30 +24,26 @@
                     <p>{{c.enseignant.nom}} {{c.enseignant.prenom}}</p>
                 </div>
                 <div class="card__precis">
-                    <a href="" class="card__icon" ></a>
-                    
                     <div>
                         <span class="card__preci card__preci--before"><b>{{c.nom}}</b></span>
                         <span class="card__preci card__preci--now">Coefficient : {{c.coefficient}}</span>
                         <span class="card__preci card__preci--now">Credits : {{c.credits}}</span>
-                        
                         <div class="center-container" *ngIf="test">
-                           
                             <button class="primary-cta" [routerLink]="['/cours','update',c.idCours]">
                                 <i class="fa-solid fa-pencil" style="margin-right: 5px;"></i>
                                 Update
                             </button>
-                            
-                          </div>
+                        </div>
                     </div>
-                    <a href="" class="card__icon"></a>
                 </div>
             </article>
         </div>
-        </main>
-       
-           
-
+    </main>
+    <div *ngIf="coursList.length === 0">
+        Aucun cours trouvé.
+    </div>
+    
+    
         <!-- ICONS -->
         <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     </body>

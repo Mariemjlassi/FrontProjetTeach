@@ -78,13 +78,7 @@ public class CourService implements IcourService {
 		return savedCour;
 	}
 
-	@Override
-	public List<Cour> getAllCours(Long id) {
-		List<Cour> c= courrep.findByEnseignant_Id(id);
-		
-			return c;	
-				
-	}
+	
 	public Cour mapToEntity(CourDTO courDTO) {
 		Cour cour=new Cour();
 		cour.setIdCours(courDTO.getIdCours());
@@ -113,6 +107,20 @@ public class CourService implements IcourService {
 		cour.setMethodeCalcul(courDTO.getMethodeCalcul());
 		return this.courrep.save(cour);
 	}
+	
+	@Override
+	public List<Cour> getCoursByEtudiantId(Long etudiantId) {
+	    return courrep.findByStudents_Id(etudiantId); 
+	}
+	
+	@Override
+	public List<Cour> getAllCours(Long id) {
+		List<Cour> c= courrep.findByEnseignant_Id(id);
+		
+			return c;	
+				
+	}
+	
 	
 	
 }
