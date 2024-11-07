@@ -5,12 +5,12 @@ import { AuthService } from 'src/app/auth/service/auth.service';
 import { map, Observable, tap } from 'rxjs';
 import { ICoursDTO } from '../model/icours-dto';
 import { IEnseignant } from 'src/app/auth/model/ienseignant';
-const BASE_URL = ["http://localhost:9090/"];
+const BASE_URL = ["http://localhost:9099/"];
 @Injectable({
   providedIn: 'root'
 })
 export class CoursService {
-  private apiUrl = 'http://localhost:9090/';
+  private apiUrl = 'http://localhost:9099/';
   cours!:ICours[];
   headers= this.service.createAuhtorizationHeader()
   
@@ -50,10 +50,21 @@ export class CoursService {
     );
 }
 
+inviteTeacherByEmail(courseCode: string, teacherEmail: string): Observable<string> {
+  return this.http.post<string>(
+      `${BASE_URL}${courseCode}/inviteTeacherByEmail`, 
+      { teacherEmail }, // Envoyer le studentEmail dans le corps
+      { headers: this.headers! }
+  );
+}
+
 getCoursById(courId: number): Observable<ICours> {
   return this.http.get<ICours>(`${BASE_URL}cours/${courId}`, { headers: this.headers! });
 }
 
+getCoursesForInvitedTeacher(teacherEmail: string): Observable<ICours[]> {
+  return this.http.get<ICours[]>(`${BASE_URL}cours/invited-enseignant/${teacherEmail}`, { headers: this.headers! });
+}
 
 
   uploadDocument(file: File, courId: number, enseignantId: number): Observable<any> {

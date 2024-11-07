@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { MessageService } from 'primeng/api';
 import { DevoirRoutingModule } from './devoir-routing.module';
 import { AddDevoirComponent } from './add-devoir/add-devoir.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +27,7 @@ import { PickListModule } from 'primeng/picklist';
     FormsModule,
     
     PickListModule,
+    
   ]
 })
 export class DevoirModule { }

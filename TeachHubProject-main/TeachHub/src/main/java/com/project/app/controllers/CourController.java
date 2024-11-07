@@ -3,6 +3,7 @@ package com.project.app.controllers;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ import com.project.app.dto.CourDTO;
 import com.project.app.models.Cour;
 import com.project.app.models.Document;
 import com.project.app.models.Enseignant;
+import com.project.app.repository.CourRepository;
+import com.project.app.repository.EnseignantRepository;
 import com.project.app.services.jwt.IcourService;
 
 
@@ -36,7 +39,10 @@ import com.project.app.services.jwt.IcourService;
 public class CourController {
 	@Autowired
 	private IcourService  courserv;
-	
+	@Autowired
+	private CourRepository courrep;
+	@Autowired
+	private EnseignantRepository enseignantRepository;
 	
 
 	
@@ -100,6 +106,16 @@ public class CourController {
 	    List<Cour> cours = courserv.getAllCours(id);
 	    return ResponseEntity.ok(cours);
 	}
+	
+	@GetMapping("/cours/invited-enseignant/{email}")
+	public ResponseEntity<List<Cour>> getCoursesForInvitedTeacher(@PathVariable(value = "email") String email) {
+	    List<Cour> cours = courserv.getCoursesForInvitedTeacher(email);
+	    return ResponseEntity.ok(cours);
+	}
+
+
+
+
 
     @GetMapping("/cours/etudiant/{id}")
     public ResponseEntity<List<Cour>> getCoursByEtudiant(@PathVariable(value = "id") Long id) {

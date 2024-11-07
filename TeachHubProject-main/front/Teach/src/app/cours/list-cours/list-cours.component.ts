@@ -29,29 +29,49 @@ export class ListCoursComponent {
   ngOnInit(): void {
     const role = localStorage.getItem('role');
     const userId = localStorage.getItem('id');
-
+    const userEmail = localStorage.getItem('email');
+  
     if (role === 'enseignant' && userId) {
-        this.service.getCoursByEnseignantId(+userId).subscribe(
-            (cours) => {
-                console.log('Cours reçus:', cours);  // Log pour vérifier les données reçues
-                this.coursList = cours;
-            },
-            (error) => {
-                console.error('Erreur lors de la récupération des cours pour l\'enseignant', error);
-            }
-        );
+      // Récupération des cours en tant qu'enseignant principal
+      this.service.getCoursByEnseignantId(+userId).subscribe(
+        (cours) => {
+          console.log('Cours reçus en tant qu\'enseignant principal:', cours);
+          this.coursList = cours;
+        },
+        (error) => {
+          console.error('Erreur lors de la récupération des cours pour l\'enseignant principal', error);
+        }
+      );
+  
+      // Vérification des cours en tant qu'enseignant invité
+      if (userEmail) {
+        this.getCoursesForInvitedTeacher(userEmail);
+      } else {
+        console.error('E-mail de l\'enseignant non trouvé dans le stockage local.');
+      }
     } else if (role === 'etudiant' && userId) {
-        this.service.getCoursByStudentId(+userId).subscribe(
-            (cours) => {
-                this.coursList = cours;
-            },
-            (error) => {
-                console.error('Erreur lors de la récupération des cours pour l\'étudiant', error);
-            }
-        );
+      this.service.getCoursByStudentId(+userId).subscribe(
+        (cours) => {
+          this.coursList = cours;
+        },
+        (error) => {
+          console.error('Erreur lors de la récupération des cours pour l\'étudiant', error);
+        }
+      );
     }
-}
-
+  }
+  
+  getCoursesForInvitedTeacher(teacherEmail: string) {
+    this.service.getCoursesForInvitedTeacher(teacherEmail).subscribe(
+      (cours) => {
+        this.coursList = cours;
+      },
+      (error) => {
+        console.error("Erreur lors de la récupération des cours pour l'enseignant invité", error);
+      }
+    );
+  }
+  
 
   deleteCours(id: number) {
     this.service.deleteCours(id).subscribe((response) => {

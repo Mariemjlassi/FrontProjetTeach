@@ -25,5 +25,6 @@ public interface IcourService {
 	List<Document> getDocumentsByCourId(Integer courId);
 	public Document getDocumentById(Long documentId);
 	public Cour getCoursById(Integer id);
+	public List<Cour> getCoursesForInvitedTeacher(String teacherEmail);
 	 
 }

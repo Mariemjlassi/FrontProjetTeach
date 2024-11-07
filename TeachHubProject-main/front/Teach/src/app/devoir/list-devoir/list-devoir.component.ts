@@ -25,6 +25,8 @@ export class ListDevoirComponent implements OnInit, DoCheck {
   test!: boolean;
   pdfFile?: File;
   subbmited = false;
+  studentEmail: string = '';
+  teacherEmail: string = '';
 
   constructor(
     private devoirService: DevoirService,
@@ -186,6 +188,50 @@ export class ListDevoirComponent implements OnInit, DoCheck {
         this.courseNom=course.nom;
       },
       (error) => console.error('Erreur lors de la récupération du code du cours :', error)
+    );
+  }
+
+  inviteStudent() {
+    this.coursService.inviteStudentByEmail(this.courseCode, this.studentEmail).subscribe(
+      () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Invitation Envoyée',
+          detail: "L'étudiant a été invité avec succès",
+          life: 3000
+        });
+        this.studentEmail = '';
+      },
+      (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: "L'invitation a échoué",
+          life: 3000
+        });
+      }
+    );
+  }
+
+  inviteTeacher() {
+    this.coursService.inviteTeacherByEmail(this.courseCode, this.teacherEmail).subscribe(
+      () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Invitation Envoyée',
+          detail: "L'enseignant a été invité avec succès",
+          life: 3000
+        });
+        this.teacherEmail = '';
+      },
+      (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: "L'invitation a échoué",
+          life: 3000
+        });
+      }
     );
   }
 }

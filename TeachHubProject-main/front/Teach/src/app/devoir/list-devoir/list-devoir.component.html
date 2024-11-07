@@ -107,11 +107,24 @@
   <div class="container">
     <!-- Sidebar pour le code du cours -->
     <div class="sidebar">
+      
+
       <div *ngIf="role === 'enseignant' && courseCode" class="course-code-box">
         <p style="font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">{{ courseNom }}</p>
-        <h2 style="color: rgb(158, 10, 10); font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">Code du cours</h2>
+        <h2 style="color: rgb(158, 10, 10); font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">Code du cours :</h2>
         <p style="font-weight: bold;">{{ courseCode }}</p>
-        
+        <br>
+        <div *ngIf="role === 'enseignant'">
+          <p style="color:#000B58;font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><i class="fa-solid fa-user" style="margin-right: 5px;"></i>Inviter un étudiant</p>
+          <input type="email" [(ngModel)]="studentEmail" placeholder="Email de l'étudiant" />
+          <button (click)="inviteStudent()" class="btn btn-primary mt-2"> <i class="fa-solid fa-paper-plane" style="margin-right: 5px;"></i> Inviter</button>
+        </div>
+<br>
+        <div *ngIf="role === 'enseignant'">
+          <p style="color:#000B58;font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><i class="fa-solid fa-user" style="margin-right: 5px;"></i>Inviter un enseignant</p>
+          <input type="email" [(ngModel)]="teacherEmail" placeholder="Email de l'enseignant" />
+          <button (click)="inviteTeacher()" class="btn btn-primary mt-2"><i class="fa-solid fa-paper-plane" style="margin-right: 5px;"></i>Inviter</button>
+        </div>
       </div>
     </div>
 

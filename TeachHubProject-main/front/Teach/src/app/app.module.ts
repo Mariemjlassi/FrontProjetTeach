@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { MessageService } from 'primeng/api';
+
 import { AddEtudiantSousGroupeComponent } from './sous-groupe/add-etudiant-sous-groupe/add-etudiant-sous-groupe.component';
 @NgModule({
   declarations: [
@@ -22,7 +24,7 @@ import { AddEtudiantSousGroupeComponent } from './sous-groupe/add-etudiant-sous-
 
 
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

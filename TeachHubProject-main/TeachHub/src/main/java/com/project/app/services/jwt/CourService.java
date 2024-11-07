@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,4 +172,13 @@ public class CourService implements IcourService {
 		return courrep.findById(courId)
 				.orElseThrow(() -> new RuntimeException("Cours non trouvé"));
 		}
+	
+	public List<Cour> getCoursesForInvitedTeacher(String teacherEmail) {
+	    Enseignant teacher = enseignantRepository.findByEmail(teacherEmail).orElse(null);
+	    if (teacher != null) {
+	        return courrep.findByInvitedTeachersContains(teacher);
+	    }
+	    return new ArrayList<>();
+	}
+
 }
