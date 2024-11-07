@@ -38,6 +38,6 @@ export class AppComponent {
     }
 
     // Vérifier si on est sur la page de liste des devoirs
-    this.dev = currentroute.startsWith('/devoirs/list');
+    this.dev = (currentroute.startsWith('/devoirs/list') || currentroute.startsWith('/devoirRendu/list')) && role == 'enseignant';
   }
 }

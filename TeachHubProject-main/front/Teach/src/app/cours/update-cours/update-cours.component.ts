@@ -14,7 +14,7 @@ export class UpdateCoursComponent {
   UpdateCoursForm!: FormGroup;
   cours!: ICours;
   submitted = false;
-
+  role = localStorage.getItem("role");
   constructor(
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,

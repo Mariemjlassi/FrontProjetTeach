@@ -21,7 +21,7 @@ public class DevoirDTO {
 
 	    private String statut;
 	    private byte[] pdf;  // Champ pour stocker le fichier PDF
-
+	    private String sousGroupes;
 	    // Getters et setters
 
 	    public byte[] getPdf() {
@@ -87,6 +87,15 @@ public class DevoirDTO {
 
 		public void setStatut(String statut) {
 			this.statut = statut;
+		}
+		
+		public String getSousGroupes() {
+			return sousGroupes;
+		}
+
+
+		public void setSousGroupes(String sousGroupes) {
+			this.sousGroupes = sousGroupes;
 		}
 	    
 }

@@ -10,4 +10,5 @@ public interface IDevoirService {
 	public List<Devoir> getAllDevoirs(Integer idCours);
 	 public Devoir modifierDevoir(Long idDevoir, DevoirDTO devoirDTO);
 	 public void deleteDevoir(Long id);
+	 public List<Devoir> getDevoirsByEtudiantId(String email, Integer idCours);
 }

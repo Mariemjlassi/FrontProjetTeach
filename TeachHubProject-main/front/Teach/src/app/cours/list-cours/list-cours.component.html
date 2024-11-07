@@ -6,12 +6,27 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMd3wLe7s7Zz1L2l1TrMW1C/pFi0D4xVRE4xThR" crossorigin="anonymous">
+
     
     </head>
     <body>
       <div *ngIf="role === 'etudiant'">
-        <input type="text" [(ngModel)]="courseCode" placeholder="Entrez le code du cours">
-        <button (click)="joinCourse()">Rejoindre le cours</button>
+        <div class="form-container">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="floatingPassword"
+                placeholder="Entrez le code du cours"
+                [(ngModel)]="courseCode"
+              />
+              <label for="floatingPassword">Rejoindre le cours</label>
+            </div>
+            <button (click)="joinCourse()" class="btn btn-success"><i class="fas fa-plus"></i></button>
+          </div>
+          
+        
     </div>
     
       <main class="main bd-grid" *ngIf="coursList.length > 0">
@@ -33,16 +48,16 @@
                                 <i class="fa-solid fa-pencil" style="margin-right: 5px;"></i>
                                 Update
                             </button>
+                            <button class="primary-cta" (click)="onSelectCourse(c.idCours)">
+                                Déposer Document
+                            </button>
                         </div>
                     </div>
                 </div>
             </article>
         </div>
+        
     </main>
-    <div *ngIf="coursList.length === 0">
-        Aucun cours trouvé.
-    </div>
-    
     
         <!-- ICONS -->
         <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>

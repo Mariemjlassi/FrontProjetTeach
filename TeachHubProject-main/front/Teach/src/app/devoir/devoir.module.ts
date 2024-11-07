@@ -6,7 +6,10 @@ import { AddDevoirComponent } from './add-devoir/add-devoir.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListDevoirComponent } from './list-devoir/list-devoir.component';
 import { UpdateDevoirComponent } from './update-devoir/update-devoir.component';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { PickListModule } from 'primeng/picklist';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,12 @@ import { UpdateDevoirComponent } from './update-devoir/update-devoir.component';
     CommonModule,
     DevoirRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    ConfirmDialogModule,
+    ToastModule,
+    ButtonModule,
+    FormsModule,
+    
+    PickListModule,
   ]
 })
 export class DevoirModule { }

@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { AddEtudiantSousGroupeComponent } from './sous-groupe/add-etudiant-sous-groupe/add-etudiant-sous-groupe.component';
 @NgModule({
   declarations: [
     AppComponent,

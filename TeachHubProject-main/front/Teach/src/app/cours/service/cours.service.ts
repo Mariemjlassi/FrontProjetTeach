@@ -50,15 +50,26 @@ export class CoursService {
     );
 }
 
-  getCoursById(id: number): Observable<ICours | null> {
-    return this.getAllCours().pipe(
-      map(cour => {
-        this.cours=cour;
-        return this.cours.find(c => c.idCours === id)||null;
-  
-       
-      })
-    );
+getCoursById(courId: number): Observable<ICours> {
+  return this.http.get<ICours>(`${BASE_URL}cours/${courId}`, { headers: this.headers! });
+}
+
+
+
+  uploadDocument(file: File, courId: number, enseignantId: number): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+
+    return this.http.post<string>(`${BASE_URL}upload/${courId}/${enseignantId}`, formData, { headers: this.headers ! });
   }
+
+  
+  getDocumentsByCourId(courId: number): Observable<any[]> {
+     return this.http.get<any[]>(`${BASE_URL}cours/${courId}/documents`, { headers: this.headers ! }); 
+    }
+
+    downloadDocument(documentId: number): Observable<Blob> { 
+      return this.http.get(`${BASE_URL}documents/${documentId}`, { responseType: 'blob' }); }
+      
   
 }

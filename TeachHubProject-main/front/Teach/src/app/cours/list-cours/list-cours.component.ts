@@ -14,8 +14,10 @@ export class ListCoursComponent {
   courseCode: string = '';
   studentEmail: string = '';
   role=localStorage.getItem("role");
-  
-  
+  documentsList: any[] = [];
+  errorMessage: string = '';
+  successMessage: string = '';
+
   coursMap: Map<IEnseignant, ICours> = new Map();
   constructor(private service:CoursService,private router:Router){}
   test!:boolean;
@@ -58,6 +60,7 @@ export class ListCoursComponent {
   }
 
   joinCourse() {
+    this.errorMessage = ''; // Réinitialise le message d'erreur avant de rejoindre
     if (this.courseCode.trim()) {
       const studentId = localStorage.getItem("id"); 
       if (studentId) {
@@ -68,6 +71,7 @@ export class ListCoursComponent {
           },
           (error) => {
             console.error('Erreur lors de la tentative de rejoindre le cours :', error);
+            this.errorMessage = 'Code de cours incorrect ou vous n\'avez pas la permission de rejoindre ce cours.';
           }
         );
       }
@@ -75,18 +79,39 @@ export class ListCoursComponent {
   }
 
   inviteStudentByEmail() {
+    this.successMessage = ''; // Réinitialiser le message de succès
+    this.errorMessage = '';   // Réinitialiser le message d'erreur
     if (this.courseCode.trim() && this.studentEmail.trim()) {
       this.service.inviteStudentByEmail(this.courseCode, this.studentEmail).subscribe(
         (response) => {
           console.log('Invitation envoyée avec succès à :', this.studentEmail);
+          this.successMessage = 'Invitation envoyée avec succès à ' + this.studentEmail;
           this.studentEmail = '';  // Réinitialiser le champ d'email
         },
         (error) => {
           console.error('Erreur lors de l\'envoi de l\'invitation :', error);
+          this.errorMessage = 'Une erreur est survenue lors de l\'envoi de l\'invitation.';
         }
       );
     } else {
-      console.warn('Veuillez remplir le code de cours et l\'email de l\'étudiant.');
+      console.warn('Veuillez remplir le code du cours et l\'email de l\'étudiant.');
+      this.errorMessage = 'Veuillez remplir tous les champs.';
     }
   }
+  onSelectCourse(coursId: number) {
+    localStorage.setItem("courId", coursId.toString());
+    
+    const enseignant = this.coursList.find(c => c.idCours === coursId)?.enseignantId; // Assurez-vous que 'enseignantId' est bien la clé
+    if (enseignant) {
+      
+
+        localStorage.setItem("enseignantId", enseignant.toString());
+    } else {
+        console.error('Aucun enseignant trouvé pour le cours:', coursId);
+    }
+
+    this.router.navigate(['/cours/deposer-document']);
 }
+
+
+  }

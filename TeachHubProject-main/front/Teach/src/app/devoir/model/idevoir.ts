@@ -7,5 +7,6 @@ export interface IDevoir {
     bareme:number,
     dateLimite:Date,
     statut:String,
-    pdf?:File
+    pdf?:File,
+    sousGroupes:any[];
 }

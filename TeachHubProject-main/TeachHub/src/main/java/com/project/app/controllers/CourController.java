@@ -1,8 +1,14 @@
 package com.project.app.controllers;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.Resource; 
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +20,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.app.dto.CourDTO;
 import com.project.app.models.Cour;
+import com.project.app.models.Document;
 import com.project.app.models.Enseignant;
 import com.project.app.services.jwt.IcourService;
 
@@ -29,15 +37,19 @@ public class CourController {
 	@Autowired
 	private IcourService  courserv;
 	
+	
+
+	
 	@PostMapping(value="/addcour/{usernameEns}")
 	public Cour addUser(@RequestBody CourDTO courDTO,@PathVariable("usernameEns") String usernameEns ) {
 		return courserv.addCour(courDTO,usernameEns);
 	}
 	
-	@GetMapping(value = "/cours/{id}")
-    public List<Cour> getAllCours(@PathVariable(value="id") Long id) {
-        return courserv.getAllCours(id); 
-    }	
+	@GetMapping("/cours/{id}") 
+	public ResponseEntity<Cour> getCoursById(@PathVariable Integer id) { 
+		Cour cour = courserv.getCoursById(id);
+		return ResponseEntity.ok(cour); 
+		}
 	
 	@PutMapping("/updatecours/{id}")
 	public ResponseEntity<Cour> updateCour(@PathVariable(value="id") int id,@RequestBody CourDTO courDTO){
@@ -72,6 +84,17 @@ public class CourController {
 	    return ResponseEntity.badRequest().body("Impossible d'inviter l'étudiant.");
 	}
 	
+	@PostMapping("/{courseCode}/inviteTeacherByEmail")
+	public ResponseEntity<String> inviteTeacherByEmail(
+	        @PathVariable String courseCode, @RequestBody Map<String, String> request) {
+	    String teacherEmail = request.get("teacherEmail");
+	    boolean result = courserv.inviteTeacherByEmail(teacherEmail, courseCode);
+	    if (result) {
+	        return ResponseEntity.ok("L'enseignant a été invité avec succès.");
+	    }
+	    return ResponseEntity.badRequest().body("Impossible d'inviter l'enseignant.");
+	}
+	
 	@GetMapping("/cours/enseignant/{id}")
 	public ResponseEntity<List<Cour>> getCoursByEnseignant(@PathVariable(value = "id") Long id) {
 	    List<Cour> cours = courserv.getAllCours(id);
@@ -83,5 +106,46 @@ public class CourController {
         List<Cour> cours = courserv.getCoursByEtudiantId(id);
         return ResponseEntity.ok(cours);
     }
+    
+    @PostMapping("/upload/{courId}/{enseignantId}")
+    public ResponseEntity<String> uploadDocument(
+            @RequestParam("file") MultipartFile file,
+            @PathVariable Integer courId,
+            @PathVariable Long enseignantId) {
+
+        try {
+            Document document = courserv.uploadDocument(file, courId, enseignantId);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Document uploaded successfully: " + document.getName());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload document");
+        }
+    }
+    
+    @GetMapping("/documents/{documentId}")
+    public ResponseEntity<Resource> downloadDocument(@PathVariable Long documentId) {
+        Document document = courserv.getDocumentById(documentId); 
+        Path path = Paths.get(document.getPath()); 
+        Resource resource;
+        try { 
+            resource = new UrlResource(path.toUri());
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la récupération du document", e);
+        }
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + document.getName() + "\"")
+            .header(HttpHeaders.CONTENT_TYPE, "application/pdf") // Spécifiez le type de contenu
+            .body(resource);
+    }
+    
+    @GetMapping("/cours/{courId}/documents")
+	public ResponseEntity<List<Document>> getDocumentsByCourId(@PathVariable Integer courId) { 
+		List<Document> documents = courserv.getDocumentsByCourId(courId); 
+		if (documents == null || documents.isEmpty())
+		{ System.out.println("Aucun document trouvé pour le cours ID " + courId); }
+		else { 
+			System.out.println("Documents trouvés pour le cours ID " + courId + ": " + documents.size());
+			} 
+		return ResponseEntity.ok(documents);
+		}
 
 }

@@ -35,36 +35,43 @@ public class DevoirController {
 	 
 	 @Transactional
 	 @PostMapping(value = "/addDevoir/{idCours}")
-	    public ResponseEntity<Devoir> addDevoir(
-	            @RequestParam("typedevoir") String typedevoir,
-	            @RequestParam("description") String description,
-	            @RequestParam("ponderation") float ponderation,
-	            @RequestParam("bareme") String bareme,
-	            @RequestParam("dateLimite") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateLimite,
-	            @RequestParam("statut") String statut,
-	            @RequestParam(value = "pdf", required = false) MultipartFile pdf,
-	            @PathVariable int idCours) {
+	  public ResponseEntity<Devoir> addDevoir(
+	      @RequestParam("typedevoir") String typedevoir,
+	      @RequestParam("description") String description,
+	      @RequestParam("ponderation") float ponderation,
+	      @RequestParam("bareme") String bareme,
+	      @RequestParam("dateLimite") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateLimite,
+	      @RequestParam("statut") String statut,
+	      @RequestParam(value = "pdf", required = false) MultipartFile pdf,
+	      @RequestParam("sousGroupes") String sousGroupesJson,  // Read as JSON string
+	      @PathVariable int idCours) {
 
-	        DevoirDTO devoirDTO = new DevoirDTO();
-	        devoirDTO.setTypedevoir(typedevoir);
-	        devoirDTO.setDescription(description);
-	        devoirDTO.setPonderation(ponderation);
-	        devoirDTO.setBareme(bareme);
-	        devoirDTO.setDateLimite(dateLimite);
-	        devoirDTO.setStatut(statut);
+	    try {
+	      // Parse the JSON string into a List<Integer> without ObjectMapper
+	      
 
-	        // Gérer le fichier PDF
-	        if (pdf != null && !pdf.isEmpty()) {
-	            try {
-	                devoirDTO.setPdf(pdf.getBytes());
-	            } catch (IOException e) {
-	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	            }
-	        }
+	      DevoirDTO devoirDTO = new DevoirDTO();
+	      devoirDTO.setTypedevoir(typedevoir);
+	      devoirDTO.setDescription(description);
+	      devoirDTO.setPonderation(ponderation);
+	      devoirDTO.setBareme(bareme);
+	      devoirDTO.setDateLimite(dateLimite);
+	      devoirDTO.setStatut(statut);
+	      devoirDTO.setSousGroupes(sousGroupesJson);
 
-	        Devoir savedDevoir = devoirService.addDevoir(devoirDTO, idCours);
-	        return ResponseEntity.status(HttpStatus.CREATED).body(savedDevoir);
+	      // Handle the PDF file if it exists
+	      if (pdf != null && !pdf.isEmpty()) {
+	        devoirDTO.setPdf(pdf.getBytes());
+	      }
+
+	      // Save the devoir using the service
+	      Devoir savedDevoir = devoirService.addDevoir(devoirDTO, idCours);
+	      return ResponseEntity.status(HttpStatus.CREATED).body(savedDevoir);
+
+	    } catch (IOException e) {
+	      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	    }
+	  }
 
 	   
 	 @GetMapping(value = "/Devoirs/{idCours}")
@@ -98,5 +105,11 @@ public class DevoirController {
 		 this.devoirService.deleteDevoir(id);
 		 return ResponseEntity.status(HttpStatus.OK).body("Devoir deleted successfully");
 	 }
+	 
+	 @GetMapping("/devoir/etudiant/{email}/{idCours}")
+	    public ResponseEntity<List<Devoir>> getCoursByEtudiant(@PathVariable(value = "email") String email,@PathVariable(value = "idCours") Integer idCours) {
+		 List<Devoir> devoirs = this.devoirService.getDevoirsByEtudiantId(email,idCours);
+	        return ResponseEntity.ok(devoirs);
+	    }
 	 
 }

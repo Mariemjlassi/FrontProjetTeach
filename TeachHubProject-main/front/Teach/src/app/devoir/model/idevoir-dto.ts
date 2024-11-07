@@ -7,5 +7,6 @@ export interface IDevoirDTO {
     bareme:number,
     dateLimite:Date,
     statut:String,
-    pdf?:File
+    pdf?:File,
+    sousGroupes:string;
 }

@@ -55,7 +55,7 @@ public class LoginController {
         if(userDetails.getAuthorities().toString().equals("[ROLE_ETUDIANT]")){
        	 role="etudiant";
        }else {
-       	role="ensiegnant";
+       	role="enseignant";
        }
         return new LoginResponse(jwt,role,this.userServiceImplement.getIdUser(loginRequest.getEmail()));
     }

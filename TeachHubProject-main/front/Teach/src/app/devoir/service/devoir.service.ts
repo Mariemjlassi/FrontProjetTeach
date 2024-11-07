@@ -40,4 +40,9 @@ export class DevoirService {
     );
   }
 
+  getDevoirsByEtudiantId(email:string,idCours:number){
+    return this.http.get<IDevoir[]>(BASE_URL + "devoir/etudiant/"+email+"/"+idCours, { headers: this.headers! });
+
+  }
+
 }

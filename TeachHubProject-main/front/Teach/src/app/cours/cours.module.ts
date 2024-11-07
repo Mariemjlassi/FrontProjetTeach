@@ -8,13 +8,15 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateCoursComponent } from './update-cours/update-cours.component';
 import { InviteStudentComponent } from './invite-student/invite-student.component';
+import { DeposerDocumentComponent } from './deposer-document/deposer-document.component';
 
 @NgModule({
   declarations: [
     AddCoursComponent,
     ListCoursComponent,
     UpdateCoursComponent,
-    InviteStudentComponent
+    InviteStudentComponent,
+    DeposerDocumentComponent
   ],
   imports: [
     CommonModule,

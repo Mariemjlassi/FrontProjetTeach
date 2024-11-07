@@ -2,7 +2,9 @@ package com.project.app.models;
 
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.Future;
 
@@ -13,10 +15,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import lombok.Data;
 
-
+@Data
 @Entity
 public class Devoir {
 	@Id
@@ -39,6 +44,13 @@ public class Devoir {
     @ManyToOne
     @JoinColumn(name = "id_cours", nullable = false)
     private Cour cours;
+    
+    @ManyToMany
+    @JoinTable(name = "devoir_sousgroupe",
+               joinColumns = @JoinColumn(name = "devoir_id"),
+               inverseJoinColumns = @JoinColumn(name = "sousgroupe_id"))
+    private List<SousGroupe> sousGroupes = new ArrayList<>();
+    
     @Lob
     private byte[] pdf;  // Champ pour stocker le fichier PDF
 

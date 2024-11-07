@@ -4,6 +4,7 @@ package com.project.app.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 @Data
 @Entity
@@ -37,8 +39,13 @@ public class Cour {
     )
     private Set<Etudiant> students = new HashSet<>();
     
-    
-    
+    @ManyToMany
+    @JoinTable(name = "course_teachers",joinColumns = @JoinColumn(name = "course_id"),inverseJoinColumns = @JoinColumn(name = "teacher_id")
+    )
+    private Set<Enseignant> invitedTeachers = new HashSet<>();
+    @OneToMany
+    (mappedBy = "cour", cascade = CascadeType.ALL)
+    private Set<Document> documents = new HashSet<>();
     
     
     private String methodeCalcul;

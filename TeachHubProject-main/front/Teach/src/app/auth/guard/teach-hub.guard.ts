@@ -7,7 +7,7 @@ export const teachHubGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   if(authService.isAuthenticated()){
     if(route.url[0]!=undefined){
-      if((localStorage.getItem("role")=="etudiant" && (route.url[0].path=="cours/add") || route.url[0].path=="cours/update")){
+      if((localStorage.getItem("role")=="etudiant" && (route.url[0].path=="cours/add") || route.url[0].path=="cours/update" || route.url[0].path=="devoir/add" || route.url[0].path=="devoir/list" || route.url[0].path=="sous-groupe")){
  
   return false;}
   else{
@@ -21,4 +21,3 @@ export const teachHubGuard: CanActivateFn = (route, state) => {
 }
 
 }
-

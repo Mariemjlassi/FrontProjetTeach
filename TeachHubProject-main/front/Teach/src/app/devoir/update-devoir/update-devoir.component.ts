@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DevoirService } from '../service/devoir.service';
 import { IDevoir } from '../model/idevoir';
 import { IDevoirDTO } from '../model/idevoir-dto';
+import { ISousGroupe } from 'src/app/sous-groupe/model/isous-groupe';
+import { SousGroupeService } from 'src/app/sous-groupe/service/sous-groupe.service';
 
 @Component({
     selector: 'app-update-devoir',
@@ -18,7 +20,8 @@ export class UpdateDevoirComponent implements OnInit {
         private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
         private service: DevoirService,
-        private router: Router
+        private router: Router,
+        private serviceSousGroupe:SousGroupeService
     ) {}
 
     ngOnInit(): void {
@@ -28,9 +31,18 @@ export class UpdateDevoirComponent implements OnInit {
                   this.devoir = d;
                   console.log(d);
                   this.initializeForm(); // Déplacer ici pour s'assurer que les données sont chargées
+                  this.targetSousGroupes=d.sousGroupes
+                  this.serviceSousGroupe.getAllSousgroupes(+localStorage.getItem("idCours")!).subscribe((sg)=>{
+                    this.sousgroupes=sg
+                    this.sousgroupes = this.sousgroupes.filter(sg => !this.targetSousGroupes.some(target => target.idSousGroupe === sg.idSousGroupe));
+               
+                  })
               }
           });
       });
+      
+       
+      
   }
   
   initializeForm(): void {
@@ -41,6 +53,7 @@ export class UpdateDevoirComponent implements OnInit {
           bareme: [this.devoir.bareme, Validators.required],
           statut: [this.devoir.statut, Validators.required],
           dateLimite: [this.devoir.dateLimite, Validators.required],
+         
       });
   }
   
@@ -58,10 +71,22 @@ export class UpdateDevoirComponent implements OnInit {
             bareme: values.bareme,
             statut:values.statut,
             dateLimite: new Date(values.dateLimite),
+            sousGroupes: JSON.stringify(this.convertToListIntger())
         };
-
         this.service.updateDevoir(updatedDevoir, this.devoir.idDevoir).subscribe(() => {
             this.router.navigate(['devoirs']);
         });
     }
+    targetSousGroupes:any[]=[];
+    sousgroupes!:ISousGroupe[];
+    convertToListIntger(){
+        let list:Array<number>=[];
+        this.targetSousGroupes.forEach(element => {
+          for (let index = 0; index < this.targetSousGroupes.length; index++) {
+            const element = this.targetSousGroupes[index];
+            list.push(element.idSousGroupe);
+          }
+        });
+        return list;
+      }
 }

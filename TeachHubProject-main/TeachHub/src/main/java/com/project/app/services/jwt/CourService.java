@@ -1,5 +1,9 @@
 
 package com.project.app.services.jwt;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +12,15 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.app.dto.CourDTO;
 import com.project.app.models.Cour;
+import com.project.app.models.Document;
 import com.project.app.models.Enseignant;
 import com.project.app.models.Etudiant;
 import com.project.app.repository.CourRepository;
+import com.project.app.repository.DocumentRepository;
 import com.project.app.repository.EnseignantRepository;
 import com.project.app.repository.EtudiantRepository;
 
@@ -32,7 +39,21 @@ public class CourService implements IcourService {
 	EnseignantRepository enseignantRepository;
 	@Autowired
     EtudiantRepository etudiantRepository;
-	
+	@Autowired
+    private DocumentRepository documentRepository;
+
+    private final String uploadDir = "uploads/";
+
+    public Document uploadDocument(MultipartFile file, Integer courId, Long enseignantId) throws Exception {
+        Cour cour = courrep.findById(courId).orElseThrow();
+        Enseignant enseignant = enseignantRepository.findById(enseignantId).orElseThrow();
+
+        Path copyLocation = Paths.get(uploadDir + file.getOriginalFilename());
+        Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+
+        Document document = new Document(file.getOriginalFilename(), file.getContentType(), copyLocation.toString(), cour, enseignant);
+        return documentRepository.save(document);
+    }
 	
 	public CourService(CourRepository courrep, EnseignantRepository enseignantRepository) {
 		super();
@@ -66,7 +87,22 @@ public class CourService implements IcourService {
 	        return false;
 	    }
 
-
+	 public boolean inviteTeacherByEmail(String teacherEmail, String courseCode) {
+		    Cour course = courrep.findByCode(courseCode);
+		    if (course != null) {
+		        Enseignant teacher = enseignantRepository.findByEmail(teacherEmail).orElse(null);
+		        if (teacher != null) {
+		            course.getInvitedTeachers().add(teacher);
+		            courrep.save(course);
+		            return true;
+		        }
+		    }
+		    return false;
+		}
+	 
+	 
+	 
+	 
 	@Override
 	public Cour addCour(CourDTO CourDTO,String usernameEns) {
 		Cour c=this.mapToEntity(CourDTO);
@@ -121,6 +157,18 @@ public class CourService implements IcourService {
 				
 	}
 	
+	@Override public List<Document> getDocumentsByCourId(Integer courId) { 
+		Cour cour = courrep.findById(courId).orElseThrow();
+		return documentRepository.findByCour(cour);
+		}
 	
+	public Document getDocumentById(Long documentId) { 
+		return documentRepository.findById(documentId)
+				.orElseThrow(() -> new RuntimeException("Document non trouvé"));
+		}
 	
+	public Cour getCoursById(Integer courId) { 
+		return courrep.findById(courId)
+				.orElseThrow(() -> new RuntimeException("Cours non trouvé"));
+		}
 }

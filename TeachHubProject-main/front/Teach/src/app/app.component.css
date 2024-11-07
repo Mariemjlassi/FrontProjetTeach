@@ -130,3 +130,9 @@ body {
 .nav-link i {
     margin-right: 0.5rem; /* Espacement à droite de l'icône */
 }
+
+.TeachHub{
+  color: #6f4c29;
+  font-weight: bolder;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}

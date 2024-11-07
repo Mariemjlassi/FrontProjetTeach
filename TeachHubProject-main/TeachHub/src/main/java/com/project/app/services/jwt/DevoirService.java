@@ -1,7 +1,11 @@
 package com.project.app.services.jwt;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,8 +20,11 @@ import com.project.app.dto.CourDTO;
 import com.project.app.dto.DevoirDTO;
 import com.project.app.models.Cour;
 import com.project.app.models.Devoir;
+import com.project.app.models.SousGroupe;
 import com.project.app.repository.CourRepository;
 import com.project.app.repository.DevoirRepository;
+import com.project.app.repository.EtudiantRepository;
+import com.project.app.repository.SousGroupeRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -27,9 +34,12 @@ public class DevoirService implements IDevoirService {
     private DevoirRepository devoirRepository;
 	@Autowired
     private CourRepository coursRepository;
-
+	@Autowired
+    private SousGroupeRepository sousGroupeRepository;
 	@Autowired
 	private PlatformTransactionManager transactionManager;
+	@Autowired
+    private EtudiantRepository etudiantRepository;
 	
 	@Transactional
 	@Override 
@@ -78,6 +88,17 @@ public class DevoirService implements IDevoirService {
 		 dev.setPonderation(devoirDTO.getPonderation());
 		 dev.setStatut(devoirDTO.getStatut());
 		 dev.setTypedevoir(devoirDTO.getTypedevoir());
+		 JSONArray jsonArray = new JSONArray(devoirDTO.getSousGroupes());
+	      List<Integer> sousGroupes = new ArrayList<>();
+	      for (int i = 0; i < jsonArray.length(); i++) {
+	        sousGroupes.add(jsonArray.getInt(i));
+	      }
+		 List<SousGroupe> list=new ArrayList<>();
+		 
+			for(Integer id:sousGroupes) {
+				list.add(this.sousGroupeRepository.findById(id).orElseThrow());
+			}
+			dev.setSousGroupes(list);
 		 return this.devoirRepository.save(dev);
 	}
 
@@ -98,8 +119,39 @@ public class DevoirService implements IDevoirService {
 		dev.setDescription(DevoirDTO.getDescription());
 		dev.setStatut(DevoirDTO.getStatut());
 		dev.setTypedevoir(DevoirDTO.getTypedevoir());
+		List<SousGroupe> list=new ArrayList<>();
+		JSONArray jsonArray = new JSONArray(DevoirDTO.getSousGroupes());
+	      List<Integer> sousGroupes = new ArrayList<>();
+	      for (int i = 0; i < jsonArray.length(); i++) {
+	        sousGroupes.add(jsonArray.getInt(i));
+	      }
+		for(Integer id:sousGroupes) {
+			list.add(this.sousGroupeRepository.findById(id).orElseThrow());
+		}
+		dev.setSousGroupes(list);
 		return dev;
 	}
+	
+	
+	@Override
+	public List<Devoir> getDevoirsByEtudiantId(String email, Integer idCours) {
+		// TODO Auto-generated method stub
+		List<Devoir> list=this.getAllDevoirs(idCours);
+//		List<Cour> c=this.courService.getAllCours(this.etudiantRepository.findByEmail(email).get().getId());
+		List<Devoir> dev=new ArrayList<>();
+		for(Devoir d:list) {
+			if(d.getSousGroupes().isEmpty()) {
+				dev.add(d);
+			}else {
+			for(SousGroupe sg:d.getSousGroupes()) {
+				if(sg.getEtudiants().contains(this.etudiantRepository.findByEmail(email).orElseThrow())) {
+					dev.add(d);
+				}
+			}
+		}}
+		return dev;
+	}
+
 
 
 }
