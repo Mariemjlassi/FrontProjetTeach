@@ -27,6 +27,14 @@ export class ListDevoirComponent implements OnInit, DoCheck {
   subbmited = false;
   studentEmail: string = '';
   teacherEmail: string = '';
+  // Variables pour gérer les messages de succès et d'erreur
+invitationStudentSuccess: string = '';
+invitationStudentError: string = '';
+invitationTeacherSuccess: string = '';
+invitationTeacherError: string = '';
+invitationStudentMessageClass: string = ''; // Classe CSS pour style de message
+invitationTeacherMessageClass: string = ''; // Classe CSS pour style de message
+
 
   constructor(
     private devoirService: DevoirService,
@@ -35,7 +43,8 @@ export class ListDevoirComponent implements OnInit, DoCheck {
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private coursService: CoursService
+    private coursService: CoursService,
+    
   ) {}
 
   ngOnInit(): void {
@@ -194,44 +203,29 @@ export class ListDevoirComponent implements OnInit, DoCheck {
   inviteStudent() {
     this.coursService.inviteStudentByEmail(this.courseCode, this.studentEmail).subscribe(
       () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Invitation Envoyée',
-          detail: "L'étudiant a été invité avec succès",
-          life: 3000
-        });
+        this.invitationStudentSuccess = "L'étudiant a été invité avec succès";
+        this.invitationStudentMessageClass = 'success-message'; // Classe CSS pour succès
         this.studentEmail = '';
       },
       (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail: "L'invitation a échoué",
-          life: 3000
-        });
+        this.invitationStudentError = "L'invitation a échoué";
+        this.invitationStudentMessageClass = 'error-message'; // Classe CSS pour erreur
       }
     );
   }
-
+  
   inviteTeacher() {
     this.coursService.inviteTeacherByEmail(this.courseCode, this.teacherEmail).subscribe(
       () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Invitation Envoyée',
-          detail: "L'enseignant a été invité avec succès",
-          life: 3000
-        });
+        this.invitationTeacherSuccess = "L'enseignant a été invité avec succès";
+        this.invitationTeacherMessageClass = 'success-message'; // Classe CSS pour succès
         this.teacherEmail = '';
       },
       (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erreur',
-          detail: "L'invitation a échoué",
-          life: 3000
-        });
+        this.invitationTeacherError = "L'invitation a échoué";
+        this.invitationTeacherMessageClass = 'error-message'; // Classe CSS pour erreur
       }
     );
   }
+  
 }

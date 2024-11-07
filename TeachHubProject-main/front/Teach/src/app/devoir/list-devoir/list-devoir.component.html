@@ -115,16 +115,31 @@
         <p style="font-weight: bold;">{{ courseCode }}</p>
         <br>
         <div *ngIf="role === 'enseignant'">
-          <p style="color:#000B58;font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><i class="fa-solid fa-user" style="margin-right: 5px;"></i>Inviter un étudiant</p>
+          <p style="color:#000B58;font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            <i class="fa-solid fa-user" style="margin-right: 5px;"></i>Inviter un étudiant
+          </p>
           <input type="email" [(ngModel)]="studentEmail" placeholder="Email de l'étudiant" />
-          <button (click)="inviteStudent()" class="btn btn-primary mt-2"> <i class="fa-solid fa-paper-plane" style="margin-right: 5px;"></i> Inviter</button>
+          <button (click)="inviteStudent()" class="btn btn-primary mt-2">
+            <i class="fa-solid fa-paper-plane" style="margin-right: 5px;"></i>Inviter
+          </button>
+          <div *ngIf="invitationStudentSuccess" class="success-message">{{ invitationStudentSuccess }}</div>
+          <div *ngIf="invitationStudentError" class="error-message">{{ invitationStudentError }}</div>
         </div>
-<br>
+        
+        <br>
+        
         <div *ngIf="role === 'enseignant'">
-          <p style="color:#000B58;font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"><i class="fa-solid fa-user" style="margin-right: 5px;"></i>Inviter un enseignant</p>
+          <p style="color:#000B58;font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+            <i class="fa-solid fa-user" style="margin-right: 5px;"></i>Inviter un enseignant
+          </p>
           <input type="email" [(ngModel)]="teacherEmail" placeholder="Email de l'enseignant" />
-          <button (click)="inviteTeacher()" class="btn btn-primary mt-2"><i class="fa-solid fa-paper-plane" style="margin-right: 5px;"></i>Inviter</button>
+          <button (click)="inviteTeacher()" class="btn btn-primary mt-2">
+            <i class="fa-solid fa-paper-plane" style="margin-right: 5px;"></i>Inviter
+          </button>
+          <div *ngIf="invitationTeacherSuccess" class="success-message">{{ invitationTeacherSuccess }}</div>
+          <div *ngIf="invitationTeacherError" class="error-message">{{ invitationTeacherError }}</div>
         </div>
+        
       </div>
     </div>
 

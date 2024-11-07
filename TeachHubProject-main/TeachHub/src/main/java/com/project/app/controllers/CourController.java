@@ -97,9 +97,9 @@ public class CourController {
 	    boolean result = courserv.inviteTeacherByEmail(teacherEmail, courseCode);
 	    if (result) {
 	        return ResponseEntity.ok("L'enseignant a été invité avec succès.");
-	    }
+	    }else {
 	    return ResponseEntity.badRequest().body("Impossible d'inviter l'enseignant.");
-	}
+	}}
 	
 	@GetMapping("/cours/enseignant/{id}")
 	public ResponseEntity<List<Cour>> getCoursByEnseignant(@PathVariable(value = "id") Long id) {
